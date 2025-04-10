@@ -1,0 +1,20 @@
+{% comment %} <!-- templates/book_appointment.html -->
+
+
+<h2>Book Appointment with {{ doctor.name }}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="date">Select Date:</label>
+        <input type="date" id="date" name="date" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="time">Select Time:</label>
+        <input type="time" id="time" name="time" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Book Appointment</button>
+</form>
+ {% endcomment %}
+
+ <h1>Appointment Successfull</h1>
