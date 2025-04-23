@@ -1,0 +1,77 @@
+<h2 class="text-center text-2xl font-semibold mb-4">Add a New Doctor</h2>
+
+<form method="POST" class="w-full max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+    {% csrf_token %}
+    
+    <!-- Form fields rendered with Django -->
+    {{ form.as_p }}
+
+    <button type="submit" class="w-full py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition">
+        Add Doctor
+    </button>
+</form>
+
+<div class="mt-3">
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="alert alert-{{ message.tags }} text-center p-3 my-2 rounded-lg shadow-sm">
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+<style>
+    /* Custom styles for the form */
+    form {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    form button {
+        background-color: #FF7F50;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s;
+    }
+
+    form button:hover {
+        background-color: #ff5722;
+    }
+
+    /* Message styling */
+    .messages {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .messages .alert {
+        font-size: 1rem;
+        padding: 12px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Different styles for success, error, and other message types */
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+</style>

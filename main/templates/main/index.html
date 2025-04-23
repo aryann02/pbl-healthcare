@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,71 +28,78 @@
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="bg-white shadow-lg sticky top-0">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <!-- Left side: Logo -->
-                <div class="shrink-0">
-                    <a href="/" class="text-2xl font-bold text-orange-500 flex items-center">
-                        <img class="h-8 w-auto" src="https://img.icons8.com/color/96/000000/hospital-room.png"
-                            alt="Healthcare Logo" />
-                        <span class="ml-2">BookForHealth</span>
-                    </a>
-                </div>
-
-                <!-- Right side: Links -->
-                <div class="hidden md:flex space-x-8">
-                    <a href="/" class="text-gray-700 hover:text-orange-500 font-medium">Home</a>
-                    <div class="relative group">
-                        <a href="{% url "find_doctor" %}" class="text-gray-700 hover:text-orange-500 font-medium">Appointments</a>
-                    </div>
-                    {% comment %} <a href="/articles" class="text-gray-700 hover:text-orange-500 font-medium">Articles</a>
-                    <a href="/about-us" class="text-gray-700 hover:text-orange-500 font-medium">About Us</a> {% endcomment %}
-                </div>
-
-                <!-- Right side: Buttons -->
-                <div class="hidden md:flex items-center space-x-4">
-                    <a href={% url "register" %}>
-                        <button class="bg-orange-500 text-white rounded-full px-4 py-2 hover:bg-orange-600 transition">Sign
-                            Up</button>
-                    </a>
-                    <a href={% url "login" %}>
-                        <button
-                            class="bg-orange-500 text-white rounded-full px-4 py-2 hover:bg-orange-600 transition">Login</button>
-                    </a>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
+   <!-- Navbar -->
+   <nav class="bg-white shadow-lg sticky top-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+            <!-- Left side: Logo -->
+            <div class="shrink-0">
+                <a href="/" class="text-2xl font-bold text-orange-500 flex items-center">
+                    <img class="h-8 w-auto" src="https://img.icons8.com/color/96/000000/hospital-room.png" alt="Healthcare Logo" />
+                    <span class="ml-2">BookForHealth</span>
+                </a>
             </div>
-        </div>
 
-        <!-- Mobile Menu -->
-        <div class="md:hidden hidden" id="mobile-menu">
-            <a href="/" class="block px-4 py-2 text-gray-700 hover:bg-blue-100">Home</a>
-            <div class="relative group">
-                <a href="/appointments" class="block px-4 py-2 text-gray-700 hover:bg-blue-100">Appointments</a>
-                <div class="absolute left-0 z-10 hidden w-48 bg-white shadow-lg group-hover:block">
-                    <a href="/view-appointments" class="block px-4 py-2 text-gray-700 hover:bg-blue-100">View
-                        Appointments</a>
-                    <a href="/schedule-appointment" class="block px-4 py-2 text-gray-700 hover:bg-blue-100">Schedule
-                        Appointment</a>
-                </div>
+            <!-- Right side: Links -->
+            <div class="hidden md:flex space-x-8">
+                {% if user.is_authenticated and user.role == 'DOCTOR' %}
+                        <!-- If user is a doctor, show the "Dashboard", "Home", and "Add Doctor" links -->
+                        <a href="{% url 'doctor_dashboard' %}" class="text-gray-700 hover:text-orange-500 font-medium">Dashboard</a>
+                        <a href="/" class="text-gray-700 hover:text-orange-500 font-medium">Home</a>
+                        <a href="{% url 'add_doctor' %}" class="text-gray-700 hover:text-orange-500 font-medium">Add Doctor</a>
+                        <a href="{% url 'doctor' %}" class="text-gray-700 hover:text-orange-500 font-medium">Doctor_list</a>
+
+            
+                    {% comment %} <!-- Links for all authenticated users -->
+                    {% endcomment %}
+                {% elif user.is_authenticated and user.role == 'PATIENT'  %}
+
+                <a href="{% url 'doctor' %}" class="text-gray-700 hover:text-orange-500 font-medium">Appointment</a>
+                <a href="/articles" class="text-gray-700 hover:text-orange-500 font-medium">Articles</a>
+                <a href="/about-us" class="text-gray-700 hover:text-orange-500 font-medium">About Us</a>
+                {% else %}
+                <a href="/articles" class="text-gray-700 hover:text-orange-500 font-medium">Articles</a>
+                <a href="/about-us" class="text-gray-700 hover:text-orange-500 font-medium">About Us</a>
+                    <!-- Links for unauthenticated users -->
+                    
+                {% endif %}
             </div>
-            <a href="/articles" class="block px-4 py-2 text-gray-700 hover:bg-blue-100">Articles</a>
-            <a href="/about-us" class="block px-4 py-2 text-gray-700 hover:bg-blue-100">About Us</a>
-            <a href="/login" class="block px-4 py-2 text-gray-700 hover:bg-blue-100">Login</a>
+            
+
+            <!-- Right side: Buttons -->
+            <div class="hidden md:flex items-center space-x-4">
+                {% if user.is_authenticated %}
+                    <!-- Display username and logout button -->
+                    <span class="text-gray-700 font-medium">{{ user.username }}</span>
+                    <a href="{% url 'logout' %}">
+                        <button class="bg-orange-500 text-white rounded-full px-4 py-2 hover:bg-orange-600 transition">Logout</button>
+                    </a>
+                {% else %}
+                    <!-- Links for unauthenticated users: Sign Up and Login -->
+                    <a href="{% url 'register' %}">
+                        <button class="bg-orange-500 text-white rounded-full px-4 py-2 hover:bg-orange-600 transition">Sign Up</button>
+                    </a>
+                    <a href="{% url 'login' %}">
+                        <button class="bg-orange-500 text-white rounded-full px-4 py-2 hover:bg-orange-600 transition">Login</button>
+                    </a>
+                {% endif %}
+            </div>
+            
+
+            <!-- Mobile Menu Button -->
+            {% comment %} <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div> {% endcomment %}
         </div>
-    </nav>
+    </div>
+
+</nav>
+
+
 
     <!-- Main Content Section -->
     <section class="py-24 bg-blue-50">
@@ -102,7 +110,7 @@
                     <pre class="text-6xl font-semibold mb-6 font-sans">Book an appointment 
 with the <span class="text-orange-500">best doctors</span> 
 out there</pre>
-                    <a href={% url "find_doctor" %}><button
+                    <a href={% url "doctor"  %}><button
                         class="bg-black text-white text-xl px-8 py-4 rounded-lg hover:bg-orange-600 transition flex items-center">
                         
                         Find Doctors

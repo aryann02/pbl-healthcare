@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Available Doctors</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f5f8fa;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .card {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border: none;
+      border-radius: 15px;
+    }
+    .card-title {
+      color: #0d6efd;
+    }
+    .btn-primary {
+      background-color: #0d6efd;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #084298;
+    }
+    .container {
+      padding-top: 30px;
+      padding-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="mb-4 text-center">Available Doctors</h2>
+    <div class="row">
+      {% for doctor in doctors %}
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ doctor.name }}</h5>
+              <p class="card-text">
+                <strong>Specialization:</strong> {{ doctor.specialization }}<br>
+                <strong>Location:</strong> {{ doctor.location }}<br>
+                <strong>Available:</strong> {{ doctor.available_from }} - {{ doctor.available_to }}
+              </p>
+              <a href="{% url 'book_appointment' doctor.id %}" class="btn btn-primary w-100">Book Appointment</a>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p class="text-center">No doctors available at the moment.</p>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+</html>

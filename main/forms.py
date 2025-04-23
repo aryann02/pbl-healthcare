@@ -16,7 +16,7 @@ def add_message(request, message_type, message_text):
         
 class UserRegistrationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)  
+        self.request = kwargs.pop('request', None)  # Pass request as argument
         super().__init__(*args, **kwargs)
 
     class Meta:
@@ -27,64 +27,65 @@ class UserRegistrationForm(forms.ModelForm):
             'username',
             'email',
             'password',
-        
+            "birth_date",
+            'role',
+            'gender',
+            'contact'
         ]
-        
 
     def clean(self):
         cleaned_data = super().clean()
-        try:
-            if not all(cleaned_data.values()):
-                add_message(self.request, 'warning', "All fields are required.")
-        except Exception as e:
-            return cleaned_data
+
+        # Ensure all fields have data
+        if not all(cleaned_data.values()):
+            add_message(self.request, messages.WARNING, "All fields are required.")
+            raise forms.ValidationError("Please fill out all fields.")  # Add a general error for unfilled fields
+
+        return cleaned_data
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
-        try:
+        if email:
+            # Validate email format
             if not re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", email):
-                add_message(self.request, 'warning', "Invalid email format.")
-
-
+                add_message(self.request, "warning", "Invalid email format.")
+                raise forms.ValidationError("Invalid email format.")
+            # Check if email already exists in the database
             if UserRegistration.objects.filter(email=email).exists():
-                add_message(self.request, 'warning', "This email address is already registered.")
-                
-
-        except Exception as e:
-                add_message(self.request, 'warning', "Error")
+                add_message(self.request, "warning", "This email is already registered.")
+                raise forms.ValidationError("This email is already registered.")
         return email
 
     def clean_contact(self):
         contact = self.cleaned_data.get("contact")
-        try:
+        if contact:
+            # Validate mobile number format
             if not re.match(r"^[6-9]\d{9}$", contact):
-                add_message(self.request, 'warning', "Invalid number format.")
-               
-
-        except Exception as e:
-           
-            raise forms.ValidationError("An error occurred during validation. Please try again.")
+                add_message(self.request, "warning", "Invalid mobile number format.")
+                raise forms.ValidationError("Invalid mobile number format.")
+            # Check if contact already exists in the database
+            if UserRegistration.objects.filter(contact=contact).exists():
+                add_message(self.request, "warning", "This contact number is already registered.")
+                raise forms.ValidationError("This contact number is already registered.")
         return contact
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        try:
+        if username:
+            # Check if username already exists in the database
             if UserRegistration.objects.filter(username=username).exists():
-                add_message(self.request, 'warning', f"Username '{username}' already exists.")
-        except Exception as e:
-            raise forms.ValidationError("An error occurred during validation. Please try again.")
+                add_message(self.request, "warning", f"Username '{username}' is already taken.")
+                raise forms.ValidationError(f"Username '{username}' is already taken.")
         return username
 
-    def clean_password(self):   
+    def clean_password(self):
         password = self.cleaned_data.get("password")
-        try:
+        if password:
+            # Validate password format: at least one lowercase, one uppercase, one number, and one special character
             if not re.match(r"""^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$""", password):
-                add_message(self.request, 'warning', "Invalid password format.")
-                raise forms.ValidationError("Invalid password format.")
-        except Exception as e:
-            raise forms.ValidationError("An error occurred during validation. Please try again.")
+                add_message(self.request, "warning", "Invalid password format.")
+                raise forms.ValidationError("Password must be at least 8 characters long, contain both uppercase and lowercase letters, a number, and a special character.")
         return password
-    
     
     
     
@@ -116,3 +117,15 @@ class LoginForm(forms.Form):
             raise forms.ValidationError("An error occurred during validation. Please try again.")
 
         return cleaned_data
+    
+    
+    
+    
+
+
+
+class DoctorForm(forms.ModelForm):
+    class Meta:
+        model = Doctor
+        fields = ['name', 'specialization', 'location', 'available_from', 'available_to']
+
