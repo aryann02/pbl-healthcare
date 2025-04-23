@@ -13,7 +13,7 @@ urlpatterns = [
     path('', index, name='index'),  # homepage
     path('doctor/', doctor_list, name='doctor'), #doctor_list
     path('book_appointment/<int:doctor_id>/', book_appointment, name='book_appointment'), # appointment
-    path('success/<int:appointment_id>/', appointment_success, name='success'), # success
+    path('success/', appointment_success, name='success'), # success
     path('doctor_dashboard/', doctor_dashboard, name='doctor_dashboard'), # doctor_dashboard
     path('add_doctor/', add_doctor, name='add_doctor'), # doctor_dashboard
 ]

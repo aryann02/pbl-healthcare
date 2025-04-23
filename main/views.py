@@ -35,11 +35,9 @@ def index(request):
 from django.shortcuts import render
 from .models import Appointment
 
-def appointment_success(request, appointment_id):
-    # Retrieve the appointment object by ID
-    appointment = Appointment.objects.get(id=appointment_id)
+def appointment_success(request):
+    appointment = Appointment.objects.filter(user=request.user)
     
-    # Pass the appointment data to the template
     return render(request, 'main/appointment_success.html', {'appointment': appointment})
 
 

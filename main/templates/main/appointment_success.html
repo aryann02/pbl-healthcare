@@ -35,8 +35,8 @@
         <div class="card shadow-lg" style="max-width: 500px; width: 100%;">
             <div class="card-body text-center">
                 <h1 class="card-title text-success mb-4">Appointment Successful!</h1>
-                <p class="card-text text-muted mb-4">Your appointment has been successfully booked. A confirmation email has been sent to you.</p>
 
+                {% comment %} {% if appointment %}
                 <div class="highlight mb-4">
                     <h5>Appointment Details:</h5>
                     <ul class="list-unstyled text-start">
@@ -45,9 +45,11 @@
                         <li><strong>Time:</strong> {{ appointment.time }}</li>
                     </ul>
                 </div>
+                {% else %}
+                <p class="text-danger">No appointment details available.</p>
+                {% endif %} {% endcomment %}
 
                 <div class="d-flex justify-content-center gap-3 mt-4">
-                    <a href="{% url 'doctor_dashboard' %}" class="btn btn-custom">Go to Dashboard</a>
                     <a href="{% url 'index' %}" class="btn btn-home">Go to Home</a>
                 </div>
             </div>
